@@ -34,7 +34,7 @@ namespace MyLogger
 				Console.WriteLine("Nie udało się zapisać do pliku.txt");
 				Console.WriteLine(e.Message);
 			}
-			Console.WriteLine($"Zapisano do pliku {FileName}");
+			Console.WriteLine($"Zapisano do pliku MyLogger/bin/Debug{FileName}");
 		}
 
 
