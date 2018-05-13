@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MyLogger
+﻿namespace MyLogger
 {
 	class Program
 	{

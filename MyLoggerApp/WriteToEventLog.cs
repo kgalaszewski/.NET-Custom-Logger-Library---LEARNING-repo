@@ -5,8 +5,8 @@ namespace MyLogger
 {
 	public sealed class WriteToEventLog : ILogger
 	{
-		string MySource = "MyLogger Application";
-		string MyLog = "MyLogger Application";
+		private string MySource = "MyLogger Application";
+		private string MyLog = "MyLogger Application";
 
 		private static readonly WriteToEventLog Instance = new WriteToEventLog();
 
