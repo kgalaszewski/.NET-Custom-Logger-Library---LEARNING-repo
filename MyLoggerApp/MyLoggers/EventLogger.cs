@@ -3,27 +3,18 @@ using System.Diagnostics;
 
 namespace MyLogger
 {
-	public sealed class WriteToEventLog : ILogger
+	public sealed class EventLogger : ILogger
 	{
 		private string MySource = "MyLogger Application";
 		private string MyLog = "MyLogger Application";
 
-		private static readonly WriteToEventLog Instance = new WriteToEventLog();
-
-		private WriteToEventLog()
+		public EventLogger()
 		{
 			if (!EventLog.SourceExists(MySource))
 				EventLog.CreateEventSource(MySource, MyLog);
 		}
 
-		public static WriteToEventLog GetInstance
-		{
-			get
-			{
-				return Instance;
-			}
-		}
-
+		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		public void LogTo(string LogName, string GetText)
 		{

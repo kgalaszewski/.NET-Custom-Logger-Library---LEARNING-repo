@@ -3,22 +3,11 @@ using System.IO;
 
 namespace MyLogger
 {
-	public sealed class WriteToFile : ILogger
+	public sealed class TxtLogger : ILogger
 	{
 		private string FileName = "FileMyLogger.txt";
 
-		private static readonly WriteToFile Instance = new WriteToFile();
-
-		private WriteToFile() { }
-
-		public static WriteToFile GetInstance
-		{
-			get
-			{
-				return Instance;
-			}
-		}
-
+		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		public void LogTo(string GetLogName, string GetText)
 		{
@@ -26,7 +15,7 @@ namespace MyLogger
 			{
 				using (StreamWriter File = new StreamWriter((FileName), true))
 				{
-					File.WriteLine($"{GetLogName}: {GetText}");
+					File.WriteLine($"{DateTime.Now}€{UserService.CurrentUser}€{GetLogName}€{GetText}");
 				}
 			}
 			catch (Exception e)
@@ -37,19 +26,22 @@ namespace MyLogger
 			Console.WriteLine($"Zapisano do pliku MyLogger/bin/Debug{FileName}");
 		}
 
+		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		public void ReadFrom()
 		{
-			Console.WriteLine("\n\nWszystkie logi aplikacji MyLogger:");
 			try
 			{
 				using (StreamReader File = new StreamReader(FileName))
 				{
 					String line;
+					LogReaderService logReaderService = new LogReaderService();
+
 					while ((line = File.ReadLine()) != null)
 					{
-						Console.WriteLine(line);
+						logReaderService.MyList.Add(line);
 					}
+					logReaderService.RunReader();
 				}
 			}
 			catch (Exception e)
@@ -57,7 +49,7 @@ namespace MyLogger
 				Console.WriteLine("Odczyt logów nie powiódł się");
 				Console.WriteLine(e.Message);
 			}
-			LoggerService.NewAction();
+			LoggerService.GetInstance.NewAction();
 		}
 	}
 }
