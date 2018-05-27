@@ -24,35 +24,35 @@ namespace MyLogger
 			char LogDestination = char.ToLower(Console.ReadKey().KeyChar);
 						
 			Console.Clear();
-				Console.WriteLine("Podaj Nazwę/Id wpisu");
-				string GetLogName = Console.ReadLine();
-				Console.WriteLine("Podaj treść wpisu");
-				string GetText = Console.ReadLine();
+			Console.WriteLine("Podaj Nazwę/Id wpisu");
+			string GetLogName = Console.ReadLine();
+			Console.WriteLine("Podaj treść wpisu");
+			string GetText = Console.ReadLine();
 
-				try
+			try
+			{
+				switch (LogDestination)
 				{
-					switch (LogDestination)
-					{
-						case '1':
-							LoggerFactory loggerFactory = new TxtLoggerFactory();
-							ILogger Logger = loggerFactory.CreateLogger();
-							Logger.LogTo(GetLogName, GetText);
-							break;
-						case '3':
-							MultiLogger(GetLogName, GetText);
-							break;
-						default:
-						RunLogger();
-							break;
-					}
-					Console.ReadKey();
-					NewAction();
+					case '1':
+						LoggerFactory loggerFactory = new TxtLoggerFactory(); 
+						ILogger Logger = loggerFactory.CreateLogger();
+						Logger.LogTo(GetLogName, GetText);
+						break;
+					case '3':
+						MultiLogger(GetLogName, GetText);
+						break;
+					default:
+					RunLogger();
+						break;
 				}
-				catch (Exception e)
-				{
-					Console.WriteLine("Nie udalo sie uruchomic Loggera");
-					Console.WriteLine(e.Message);
-				}				
+				Console.ReadKey();
+				NewAction();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Nie udalo sie uruchomic Loggera");
+				Console.WriteLine(e.Message);
+			}					
 		}
 
 		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------

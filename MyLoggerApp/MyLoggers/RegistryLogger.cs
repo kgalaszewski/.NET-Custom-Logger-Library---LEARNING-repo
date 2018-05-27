@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 
 namespace MyLogger
 {
@@ -13,9 +14,14 @@ namespace MyLogger
 				MyLoggerRegistery.SetValue(GetLogName, GetText);
 				MyLoggerRegistery.Close();
 			}
+			catch (SecurityException se)
+			{
+				Console.WriteLine("Nie posiadasz odpowiednich uprawnien do tworzenia wpisu w rejestrze");
+				Console.WriteLine(se.Message);
+			}
 			catch (Exception e)
 			{
-				Console.WriteLine("Zapis do Edytora rejestru nie powiódł się");
+				Console.WriteLine("Zapis do rejestru nie powiodł się");
 				Console.WriteLine(e.Message);
 			}
 			Console.WriteLine("Dokonano wpisu do rejestru: HKEY_CURRENT_USER/MyLoggerRegistery");			

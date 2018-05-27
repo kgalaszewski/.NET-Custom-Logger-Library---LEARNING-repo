@@ -16,13 +16,14 @@ namespace MyLogger
 				using (StreamWriter File = new StreamWriter((FileName), true))
 				{
 					File.WriteLine($"{DateTime.Now}€{UserService.CurrentUser}€{GetLogName}€{GetText}");
+					File.Close();
 				}
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine("Nie udało się zapisać do pliku.txt");
 				Console.WriteLine(e.Message);
-			}
+			}			
 			Console.WriteLine($"Zapisano do pliku MyLogger/bin/Debug{FileName}");
 		}
 
@@ -41,6 +42,7 @@ namespace MyLogger
 					{
 						logReaderService.MyList.Add(line);
 					}
+					File.Close();
 					logReaderService.RunReader();
 				}
 			}

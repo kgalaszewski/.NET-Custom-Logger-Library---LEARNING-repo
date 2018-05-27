@@ -23,6 +23,11 @@ namespace MyLogger
 			{
 				EventLog.WriteEntry(MySource, Text);
 			}
+			catch (SystemException se)
+			{
+				Console.WriteLine("Nie masz wystarczajacych uprawnien");
+				Console.WriteLine(se.Message);
+			}
 			catch (Exception e)
 			{
 				Console.WriteLine("Zapis do EventViewer nie powiódł się");
