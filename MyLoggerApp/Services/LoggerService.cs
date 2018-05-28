@@ -9,7 +9,7 @@ namespace MyLogger
 	{
 		private static readonly LoggerService Instance = new LoggerService();
 
-		LoggerProvider loggerProvider = new LoggerProvider();
+		LoggerFactoryProvider loggerFactoryProvider = new LoggerFactoryProvider();
 
 		private LoggerService()	{ }
 
@@ -70,7 +70,7 @@ namespace MyLogger
 		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		public void FileLogger(string GetLogName, string GetText)
 		{
-			LoggerFactory FileFactory = loggerProvider.LoggerFactoryList.Where(z => z is TxtLoggerFactory).Select(x => x as TxtLoggerFactory).FirstOrDefault();
+			LoggerFactory FileFactory = loggerFactoryProvider.LoggerFactoryList.Where(z => z is TxtLoggerFactory).Select(x => x as TxtLoggerFactory).FirstOrDefault();
 			ILogger FileLogger = FileFactory.CreateLogger();
 			FileLogger.LogTo(GetLogName,GetText);
 		}
@@ -78,7 +78,7 @@ namespace MyLogger
 
 		public void MultiLogger(string GetLogName, string GetText)
 		{
-			foreach (var Factory in loggerProvider.LoggerFactoryList)
+			foreach (var Factory in loggerFactoryProvider.LoggerFactoryList)
 			{
 				ILogger ThisLogger = Factory.CreateLogger();
 				ThisLogger.LogTo(GetLogName, GetText);
