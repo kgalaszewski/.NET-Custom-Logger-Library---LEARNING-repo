@@ -52,7 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoggersFactory\LoggerProvider.cs" />
+    <Compile Include="LoggersFactory\LoggerFactoryProvider.cs" />
     <Compile Include="LoggersFactory\EventLoggerFactory.cs" />
     <Compile Include="LoggersFactory\LoggerFactory.cs" />
     <Compile Include="Services\LogReaderService.cs" />
