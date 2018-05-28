@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace MyLogger
@@ -8,7 +9,9 @@ namespace MyLogger
 	{
 		private static readonly LoggerService Instance = new LoggerService();
 
-		private LoggerService() { }
+		LoggerProvider loggerProvider = new LoggerProvider();
+
+		private LoggerService()	{ }
 
 		public static LoggerService GetInstance
 		{
@@ -22,48 +25,63 @@ namespace MyLogger
 			Console.Clear();
 			Console.WriteLine("Gdzie chcesz dokonac wpisu: \nRegistry && EventViewer && File.txt -> wybierz '3' \nFile.txt -> wybierz '1'");
 			char LogDestination = char.ToLower(Console.ReadKey().KeyChar);
-						
-			Console.Clear();
-			Console.WriteLine("Podaj Nazwę/Id wpisu");
-			string GetLogName = Console.ReadLine();
-			Console.WriteLine("Podaj treść wpisu");
-			string GetText = Console.ReadLine();
 
-			try
+			if (LogDestination.Equals('1') || LogDestination.Equals('3'))
 			{
-				switch (LogDestination)
+				Console.Clear();
+				Console.WriteLine("Podaj Nazwę/Id wpisu");
+				string GetLogName = Console.ReadLine();
+				Console.WriteLine("Podaj treść wpisu");
+				string GetText = Console.ReadLine();
+
+				try
 				{
-					case '1':
-						LoggerFactory loggerFactory = new TxtLoggerFactory(); 
-						ILogger Logger = loggerFactory.CreateLogger();
-						Logger.LogTo(GetLogName, GetText);
-						break;
-					case '3':
-						MultiLogger(GetLogName, GetText);
-						break;
-					default:
-					RunLogger();
-						break;
+					switch (LogDestination)
+					{
+						case '1':
+							FileLogger(GetLogName, GetText);
+							break;
+						case '3':
+							MultiLogger(GetLogName, GetText);
+							break;
+						default:
+							Console.WriteLine($"Wybrano niepoprawne zrodlo zapisu: {LogDestination}");
+							break;
+					}
+					Console.ReadKey();
+					NewAction();
 				}
-				Console.ReadKey();
+				catch (Exception e)
+				{
+					Console.WriteLine("Nie udalo sie uruchomic Loggera");
+					Console.WriteLine(e.Message);
+				}
+			}
+			else
+			{
+				Console.Clear();
+				Console.WriteLine("Nie ma takiej opcji");
+				Thread.Sleep(1000);
 				NewAction();
 			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Nie udalo sie uruchomic Loggera");
-				Console.WriteLine(e.Message);
-			}					
+				
 		}
 
 		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		public void FileLogger(string GetLogName, string GetText)
+		{
+			LoggerFactory FileFactory = loggerProvider.LoggerFactoryList.Where(z => z is TxtLoggerFactory).Select(x => x as TxtLoggerFactory).FirstOrDefault();
+			ILogger FileLogger = FileFactory.CreateLogger();
+			FileLogger.LogTo(GetLogName,GetText);
+		}
+
 
 		public void MultiLogger(string GetLogName, string GetText)
 		{
-			List<LoggerFactory> MyList = new List<LoggerFactory> { new TxtLoggerFactory(), new EventLoggerFactory(), new RegistryLoggerFactory() };
-			foreach (var loggerFactory in MyList)
+			foreach (var Factory in loggerProvider.LoggerFactoryList)
 			{
-				ILogger Logger = loggerFactory.CreateLogger();
-				Logger.LogTo(GetLogName, GetText);
+				ILogger ThisLogger = Factory.CreateLogger();
+				ThisLogger.LogTo(GetLogName, GetText);
 			}
 		}
 

@@ -52,19 +52,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyLoggerFactories\EventLoggerFactory.cs" />
-    <Compile Include="MyAbstractClasses\LoggerFactory.cs" />
-    <Compile Include="MyServices\LogReaderService.cs" />
-    <Compile Include="MyLoggerFactories\RegistryLoggerFactory.cs" />
-    <Compile Include="MyLoggerFactories\TxtLoggerFactory.cs" />
-    <Compile Include="MyServices\UserService.cs" />
-    <Compile Include="MyInterfaces\ILogger.cs" />
-    <Compile Include="MyServices\LoggerService.cs" />
-    <Compile Include="MyProgram\Program.cs" />
+    <Compile Include="LoggersFactory\LoggerProvider.cs" />
+    <Compile Include="LoggersFactory\EventLoggerFactory.cs" />
+    <Compile Include="LoggersFactory\LoggerFactory.cs" />
+    <Compile Include="Services\LogReaderService.cs" />
+    <Compile Include="LoggersFactory\RegistryLoggerFactory.cs" />
+    <Compile Include="LoggersFactory\TxtLoggerFactory.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Loggers\ILogger.cs" />
+    <Compile Include="Services\LoggerService.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MyLoggers\EventLogger.cs" />
-    <Compile Include="MyLoggers\TxtLogger.cs" />
-    <Compile Include="MyLoggers\RegistryLogger.cs" />
+    <Compile Include="Loggers\EventLogger.cs" />
+    <Compile Include="Loggers\TxtLogger.cs" />
+    <Compile Include="Loggers\RegistryLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
