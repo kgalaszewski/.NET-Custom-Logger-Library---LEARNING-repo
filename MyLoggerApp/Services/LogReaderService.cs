@@ -72,7 +72,7 @@ namespace MyLogger
 				string[] SplitRow = item.Split('€');
 				singleRow = $"Log uzytkownika {SplitRow[1]}\nData dodania: {SplitRow[0]}\nNazwa loga: {SplitRow[2]}\nTresc Loga: {SplitRow[3]}\n\n";
 				AllLogsList.Add(singleRow);
-				if (SplitRow[1].Contains(UserService.CurrentUser)) UserLogsList.Add(singleRow);
+				if (SplitRow[1].Equals(UserService.CurrentUser)) UserLogsList.Add(singleRow);
 			}
 		}
 	}

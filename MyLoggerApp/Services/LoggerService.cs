@@ -68,6 +68,15 @@ namespace MyLogger
 		}
 
 		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		public static void ChangeUser()
+		{
+			UserService userService = new UserService();
+			userService.SetCurrentUser();
+		}
+
+		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 		public void FileLogger(string GetLogName, string GetText)
 		{
 			LoggerFactory FileFactory = loggerFactoryProvider.LoggerFactoryList.Where(z => z is TxtLoggerFactory).Select(x => x as TxtLoggerFactory).FirstOrDefault();
@@ -92,16 +101,19 @@ namespace MyLogger
 			try
 			{
 				Console.Clear();
-				Console.WriteLine("Aby zapisać kolejny log (wciśnij 'Z') \n\nAby wyświetlić wszystkie zapisane logi (wciśnij 'W')");
+				Console.WriteLine("Aby zapisać kolejny log (wciśnij 'Z') \n\nAby wyświetlić wszystkie zapisane logi (wciśnij 'W') " +
+					"\n\nAby zmienic nazwe uzytkownika (wcisnij 'C') \n\nAby zamknac MyLoggerApp (wciśnij 'X')");
 				char a = char.ToLower(Console.ReadKey().KeyChar);
 				Console.Clear();
 				switch (a)
 				{
+					case 'x': CloseLogger(); break;
+					case 'c': ChangeUser(); break;
 					case 'z': RunLogger(); break;
 					case 'w':
 						TxtLogger txtLogger = new TxtLogger();
 						txtLogger.ReadFrom(); break;
-					default: CloseLogger(); break;
+					default: NewAction(); break;
 				}
 			}
 			catch (Exception e)
@@ -115,7 +127,7 @@ namespace MyLogger
 		public void CloseLogger()
 		{
 			Console.Clear();
-			Console.WriteLine("WYBRANO  NIEPOPRAWNA  OPCJE - NASTAPI ZAMKNIECIE");
+			Console.WriteLine("WYBRANO OPCJE - ZAKONCZ PROGRAM");
 			Thread.Sleep(1000);
 			Environment.Exit(0);
 		}

@@ -6,7 +6,6 @@
 		{
 			UserService ThisUser = new UserService();
 			ThisUser.SetCurrentUser();
-			LoggerService.GetInstance.RunLogger();
 		}
 	}
 }
