@@ -12,6 +12,9 @@ namespace MyLogger
 
 		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+			/// <summary>
+			/// After getting logs from file, asking user which logs should be read, then segregating them and displaying
+			/// </summary>
 		public void RunReader()
 		{
 			Console.WriteLine("Aby wyswietlic wszystkie logi, wybierz '1' \nAby wyswietlic tylko Twoje logi, wybierz '2'");
@@ -64,6 +67,9 @@ namespace MyLogger
 
 		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+			/// <summary>
+			/// Segregating logs by User
+			/// </summary>
 		public void SplitLogs()
 		{
 			foreach (var item in MyList)

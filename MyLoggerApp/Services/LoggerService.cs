@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
@@ -20,6 +19,9 @@ namespace MyLogger
 
 		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+			/// <summary>
+			/// Asking user where to log, then creating Loggers with factory
+			/// </summary>
 		public void RunLogger()
 		{
 			Console.Clear();

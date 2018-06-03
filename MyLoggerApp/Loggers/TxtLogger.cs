@@ -29,6 +29,9 @@ namespace MyLogger
 
 		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+			/// <summary>
+			/// Reading all logs from file, then injecting to LogReaderService List
+			/// </summary>
 		public void ReadFrom()
 		{
 			try
