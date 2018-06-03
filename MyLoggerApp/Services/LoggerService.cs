@@ -8,8 +8,6 @@ namespace MyLogger
 	{
 		private static readonly LoggerService Instance = new LoggerService();
 
-		LoggerFactoryProvider loggerFactoryProvider = new LoggerFactoryProvider();
-
 		private LoggerService()	{ }
 
 		public static LoggerService GetInstance
@@ -19,9 +17,13 @@ namespace MyLogger
 
 		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-			/// <summary>
-			/// Asking user where to log, then creating Loggers with factory
-			/// </summary>
+		/// <summary>
+		/// Asking user where to log, then creating Loggers with factory
+		/// </summary>
+		
+		LoggerFactoryProvider loggerFactoryProvider = new LoggerFactoryProvider();
+
+
 		public void RunLogger()
 		{
 			Console.Clear();
