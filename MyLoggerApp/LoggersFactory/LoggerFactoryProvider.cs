@@ -3,7 +3,7 @@
 namespace MyLogger
 {
 	/// <summary>
-	/// Keeping all LoggerFactories in list to let User choose which loogger to create from available options
+	/// Keeping all LoggerFactories in list to let User choose which logger to create from available options
 	/// </summary>
 	class LoggerFactoryProvider
 	{

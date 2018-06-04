@@ -14,42 +14,40 @@ namespace MyLogger
 		{
 			get { return Instance; }
 		}
-
-		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		/// <summary>
-		/// Asking user where to log, then creating Loggers with factory
-		/// </summary>
+				
 		
 		LoggerFactoryProvider loggerFactoryProvider = new LoggerFactoryProvider();
 
 
+		/// <summary>
+		/// Asking user where to log, then creating Loggers with factory
+		/// </summary>
 		public void RunLogger()
 		{
 			Console.Clear();
 			Console.WriteLine("Gdzie chcesz dokonac wpisu: \nRegistry && EventViewer && File.txt -> wybierz '3' \nFile.txt -> wybierz '1'");
-			char LogDestination = char.ToLower(Console.ReadKey().KeyChar);
+			char logDestination = char.ToLower(Console.ReadKey().KeyChar);
 
-			if (LogDestination.Equals('1') || LogDestination.Equals('3'))
+			if (logDestination.Equals('1') || logDestination.Equals('3'))
 			{
 				Console.Clear();
 				Console.WriteLine("Podaj Nazwę/Id wpisu");
-				string GetLogName = Console.ReadLine();
+				string getLogName = Console.ReadLine();
 				Console.WriteLine("Podaj treść wpisu");
-				string GetText = Console.ReadLine();
+				string getLogContent = Console.ReadLine();
 
 				try
 				{
-					switch (LogDestination)
+					switch (logDestination)
 					{
 						case '1':
-							FileLogger(GetLogName, GetText);
+							LogToFile(getLogName, getLogContent);
 							break;
 						case '3':
-							MultiLogger(GetLogName, GetText);
+							LogToAllDestinations(getLogName, getLogContent);
 							break;
 						default:
-							Console.WriteLine($"Wybrano niepoprawne zrodlo zapisu: {LogDestination}");
+							Console.WriteLine($"Niepoprawny wybor (dostepne opcje: 1 oraz 3)");
 							break;
 					}
 					Console.ReadKey();
@@ -71,52 +69,57 @@ namespace MyLogger
 				
 		}
 
-		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
 
-		public static void ChangeUser()
+
+		public static void ChangeCurrentUser()
 		{
-			UserService userService = new UserService();
-			userService.SetCurrentUser();
-		}
-
-		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		public void FileLogger(string GetLogName, string GetText)
-		{
-			LoggerFactory FileFactory = loggerFactoryProvider.LoggerFactoryList.Where(z => z is TxtLoggerFactory).Select(x => x as TxtLoggerFactory).FirstOrDefault();
-			ILogger FileLogger = FileFactory.CreateLogger();
-			FileLogger.LogTo(GetLogName,GetText);
+			UserService newUserService = new UserService();
+			newUserService.SetCurrentUser();
 		}
 
 
-		public void MultiLogger(string GetLogName, string GetText)
+		
+
+		public void LogToFile(string getLogName, string getText)
 		{
-			foreach (var Factory in loggerFactoryProvider.LoggerFactoryList)
+			LoggerFactory fileFactory = loggerFactoryProvider.LoggerFactoryList.Where(z => z is TxtLoggerFactory).Select(x => x as TxtLoggerFactory).FirstOrDefault();
+			ILogger fileLogger = fileFactory.CreateLogger();
+			fileLogger.LogTo(getLogName,getText);
+		}
+
+
+
+
+		public void LogToAllDestinations(string getLogName, string getText)
+		{
+			foreach (var factory in loggerFactoryProvider.LoggerFactoryList)
 			{
-				ILogger ThisLogger = Factory.CreateLogger();
-				ThisLogger.LogTo(GetLogName, GetText);
+				ILogger thisLogger = factory.CreateLogger();
+				thisLogger.LogTo(getLogName, getText);
 			}
 		}
 
-		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+
 
 		public void NewAction()
 		{
 			try
 			{
 				Console.Clear();
-				Console.WriteLine("Aby zapisać kolejny log (wciśnij 'Z') \n\nAby wyświetlić wszystkie zapisane logi (wciśnij 'W') " +
+				Console.WriteLine("Aby zapisać log (wciśnij 'Z') \n\nAby wyświetlić zapisane logi (wciśnij 'W') " +
 					"\n\nAby zmienic nazwe uzytkownika (wcisnij 'C') \n\nAby zamknac MyLoggerApp (wciśnij 'X')");
-				char a = char.ToLower(Console.ReadKey().KeyChar);
+				char newDecision = char.ToLower(Console.ReadKey().KeyChar);
 				Console.Clear();
-				switch (a)
+				switch (newDecision)
 				{
 					case 'x': CloseLogger(); break;
-					case 'c': ChangeUser(); break;
+					case 'c': ChangeCurrentUser(); break;
 					case 'z': RunLogger(); break;
 					case 'w':
 						TxtLogger txtLogger = new TxtLogger();
-						txtLogger.ReadFrom(); break;
+						txtLogger.ReadLogsFromFile(); break;
 					default: NewAction(); break;
 				}
 			}
@@ -126,7 +129,8 @@ namespace MyLogger
 			}
 		}
 
-		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+
 
 		public void CloseLogger()
 		{

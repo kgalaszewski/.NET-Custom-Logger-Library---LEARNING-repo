@@ -5,14 +5,14 @@ namespace MyLogger
 {
 	public sealed class RegistryLogger : ILogger
 	{
-		public void LogTo(string GetLogName, string GetText)
+		public void LogTo(string getLogName, string getLogContent)
 		{
 			try
 			{
-				Microsoft.Win32.RegistryKey MyLoggerRegistery;
-				MyLoggerRegistery = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("MyLoggerRegistery");
-				MyLoggerRegistery.SetValue(GetLogName, GetText);
-				MyLoggerRegistery.Close();
+				Microsoft.Win32.RegistryKey myRegistryKey;
+				myRegistryKey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("MyLoggerRegistry");
+				myRegistryKey.SetValue(getLogName, getLogContent);
+				myRegistryKey.Close();
 			}
 			catch (SecurityException se)
 			{

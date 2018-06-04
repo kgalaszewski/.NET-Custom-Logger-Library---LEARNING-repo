@@ -5,18 +5,18 @@ namespace MyLogger
 {
 	public sealed class TxtLogger : ILogger
 	{
-		private string FileName = "FileMyLogger.txt";
+		private string fileName = "FileMyLogger.txt";
 
-		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		public void LogTo(string GetLogName, string GetText)
+		
+		
+		public void LogTo(string getLogName, string getLogContent)
 		{
 			try
 			{
-				using (StreamWriter File = new StreamWriter((FileName), true))
+				using (StreamWriter thisTxtFile = new StreamWriter((fileName), true))
 				{
-					File.WriteLine($"{DateTime.Now}€{UserService.CurrentUser}€{GetLogName}€{GetText}");
-					File.Close();
+					thisTxtFile.WriteLine($"{DateTime.Now}€{UserService.CurrentUser}€{getLogName}€{getLogContent}");
+					thisTxtFile.Close();
 				}
 			}
 			catch (Exception e)
@@ -24,28 +24,27 @@ namespace MyLogger
 				Console.WriteLine("Nie udało się zapisać do pliku.txt");
 				Console.WriteLine(e.Message);
 			}			
-			Console.WriteLine($"Zapisano do pliku MyLogger/bin/Debug{FileName}");
+			Console.WriteLine($"Zapisano do pliku MyLogger/bin/Debug{fileName}");
 		}
 
-		//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-			/// <summary>
-			/// Reading all logs from file, then injecting to LogReaderService List
-			/// </summary>
-		public void ReadFrom()
+		/// <summary>
+		/// Reading all logs from file, then injecting to LogReaderService List
+		/// </summary>
+		public void ReadLogsFromFile()
 		{
 			try
 			{
-				using (StreamReader File = new StreamReader(FileName))
+				using (StreamReader thisTxtFile = new StreamReader(fileName))
 				{
-					String line;
+					string thisRow;
 					LogReaderService logReaderService = new LogReaderService();
 
-					while ((line = File.ReadLine()) != null)
+					while ((thisRow = thisTxtFile.ReadLine()) != null)
 					{
-						logReaderService.MyList.Add(line);
+						logReaderService.ListOfAllLines.Add(thisRow);
 					}
-					File.Close();
+					thisTxtFile.Close();
 					logReaderService.RunReader();
 				}
 			}

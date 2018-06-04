@@ -2,6 +2,6 @@
 {
 	interface ILogger
 	{
-		void LogTo(string GetText, string GetLogName);
+		void LogTo(string getLogContent, string getLogName);
 	}
 }
