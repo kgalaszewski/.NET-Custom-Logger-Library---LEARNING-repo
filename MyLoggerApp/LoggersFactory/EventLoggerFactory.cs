@@ -8,3 +8,5 @@
 		}
 	}
 }
+//UserService currentUserService = new UserService();
+////currentUserService.SetCurrentUser();

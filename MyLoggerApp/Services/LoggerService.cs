@@ -18,7 +18,8 @@ namespace MyLogger
 		
 		LoggerFactoryProvider loggerFactoryProvider = new LoggerFactoryProvider();
 
-
+		//UserService currentUserService = new UserService();
+		////currentUserService.SetCurrentUser();
 		/// <summary>
 		/// Asking user where to log, then creating Loggers with factory
 		/// </summary>

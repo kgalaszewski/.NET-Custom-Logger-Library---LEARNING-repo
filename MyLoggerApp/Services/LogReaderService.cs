@@ -9,8 +9,9 @@ namespace MyLogger
 		public List<string> ListOfAllLines = new List<string>();
 		private List<string> listOfAllLogs = new List<string>();
 		private List<string> listOfLogsSelectedByUser = new List<string>();
-		
 
+		//UserService currentUserService = new UserService();
+		////currentUserService.SetCurrentUser();
 		/// <summary>
 		/// After getting logs from file, asking user which logs should be read, then segregating them and displaying
 		/// </summary>

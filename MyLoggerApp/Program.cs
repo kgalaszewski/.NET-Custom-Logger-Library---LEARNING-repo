@@ -4,9 +4,10 @@
 	{
 		static void Main(string[] args)
 		{
-			// Setting currentUser will start Logger
 			UserService currentUserService = new UserService();
 			currentUserService.SetCurrentUser();
+			//UserService currentUserService = new UserService();
+			////currentUserService.SetCurrentUser();
 		}
 	}
 }

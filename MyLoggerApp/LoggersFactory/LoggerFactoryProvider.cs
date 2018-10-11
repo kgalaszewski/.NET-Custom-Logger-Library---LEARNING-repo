@@ -10,3 +10,5 @@ namespace MyLogger
 		public List<LoggerFactory> LoggerFactoryList = new List<LoggerFactory>() {new TxtLoggerFactory(), new EventLoggerFactory(), new RegistryLoggerFactory()};
 	}
 }
+//UserService currentUserService = new UserService();
+////currentUserService.SetCurrentUser();

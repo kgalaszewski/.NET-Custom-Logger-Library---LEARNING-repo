@@ -26,7 +26,8 @@ namespace MyLogger
 			}			
 			Console.WriteLine($"Zapisano do pliku MyLogger/bin/Debug{fileName}");
 		}
-
+		//UserService currentUserService = new UserService();
+		////currentUserService.SetCurrentUser();
 
 		/// <summary>
 		/// Reading all logs from file, then injecting to LogReaderService List

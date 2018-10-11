@@ -12,7 +12,8 @@ namespace MyLogger
 		public static string CurrentUser;
 
 
-
+		//UserService currentUserService = new UserService();
+		////currentUserService.SetCurrentUser();
 		public void SetCurrentUser()
 		{
 			Console.Clear();

@@ -13,8 +13,9 @@ namespace MyLogger
 			if (!EventLog.SourceExists(mySource))
 				EventLog.CreateEventSource(mySource, myLog);
 		}
+		//UserService currentUserService = new UserService();
+		////currentUserService.SetCurrentUser();
 
-		
 
 
 		public void LogTo(string getLogName, string getLogContent)

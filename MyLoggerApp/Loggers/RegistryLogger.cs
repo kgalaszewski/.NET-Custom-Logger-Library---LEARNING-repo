@@ -28,3 +28,5 @@ namespace MyLogger
 		}
 	}
 }
+//UserService currentUserService = new UserService();
+////currentUserService.SetCurrentUser();
