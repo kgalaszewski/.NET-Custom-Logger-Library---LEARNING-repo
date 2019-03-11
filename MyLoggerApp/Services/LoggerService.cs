@@ -1,145 +1,111 @@
-﻿using System;
-using System.Linq;
+﻿using MyLoggerApp.LoggersFactory;
+using MyLoggerApp.Services;
+using System;
 using System.Threading;
 
 namespace MyLogger
 {
-	public sealed class LoggerService
+    public sealed class LoggerService
 	{
-		private static readonly LoggerService Instance = new LoggerService();
+		private static readonly LoggerService _Instance = new LoggerService();
 
 		private LoggerService()	{ }
 
-		public static LoggerService GetInstance
+		public static LoggerService GetInstance()
 		{
-			get { return Instance; }
+			return _Instance;
 		}
-				
-		
-		LoggerFactoryProvider loggerFactoryProvider = new LoggerFactoryProvider();
+        
+        // Public methods ----------------------------------------------------------------------------------------------------------------------------------
 
-		//UserService currentUserService = new UserService();
-		////currentUserService.SetCurrentUser();
-		/// <summary>
-		/// Asking user where to log, then creating Loggers with factory
-		/// </summary>
-		public void RunLogger()
+        public void StartLoggerLogic()
 		{
-			Console.Clear();
-			Console.WriteLine("Gdzie chcesz dokonac wpisu: \nRegistry && EventViewer && File.txt -> wybierz '3' \nFile.txt -> wybierz '1'");
-			char logDestination = char.ToLower(Console.ReadKey().KeyChar);
+            HelperService.GetInstance().ClearConsoleAndWriteMessage("Where do you want to log your message : \n3 destinations : Registry, EventViewer and File.txt -> press '3' \nOnly to File.txt -> press '1'");
+            char logDestination = char.ToLower(Console.ReadKey().KeyChar);
 
 			if (logDestination.Equals('1') || logDestination.Equals('3'))
 			{
-				Console.Clear();
-				Console.WriteLine("Podaj Nazwę/Id wpisu");
-				string getLogName = Console.ReadLine();
-				Console.WriteLine("Podaj treść wpisu");
-				string getLogContent = Console.ReadLine();
+                HelperService.GetInstance().ClearConsoleAndWriteMessage("Please, type the name/ID of your message");
+                string givenLogName = Console.ReadLine();
+                HelperService.GetInstance().ClearConsoleAndWriteMessage("Please, type your message");
+				string givenContent = Console.ReadLine();
 
-				try
-				{
-					switch (logDestination)
-					{
-						case '1':
-							LogToFile(getLogName, getLogContent);
-							break;
-						case '3':
-							LogToAllDestinations(getLogName, getLogContent);
-							break;
-						default:
-							Console.WriteLine($"Niepoprawny wybor (dostepne opcje: 1 oraz 3)");
-							break;
-					}
-					Console.ReadKey();
-					NewAction();
-				}
-				catch (Exception e)
-				{
-					Console.WriteLine("Nie udalo sie uruchomic Loggera");
-					Console.WriteLine(e.Message);
-				}
+                HelperService.GetInstance().EnsureThatActionSucceed(() => {
+                    if (logDestination.Equals('1'))
+                        logToFile(givenLogName, givenContent);
+                    else
+                        logToAllDestinations(givenLogName, givenContent);
+
+                    Console.ReadKey();
+                    ChooseNewAction();
+                }, "Could not run logger properly");
 			}
 			else
 			{
-				Console.Clear();
-				Console.WriteLine("Nie ma takiej opcji");
-				Thread.Sleep(1000);
-				NewAction();
-			}
-				
+                HelperService.GetInstance().ClearConsoleAndWriteMessage("Incorret choice");
+                Thread.Sleep(1000);
+				ChooseNewAction();
+			}				
 		}
 
-		
+        public void ChooseNewAction()
+        {
+            try
+            {
+                HelperService.GetInstance().ClearConsoleAndWriteMessage("To save your logs (press 'Z') \n\nTo display all the saved logs (press 'W') " +
+                    "\n\nTo change your NickName (press 'C') \n\nTo Close MyLoggerApp (press 'X')");
 
+                startNewAction(char.ToLower(Console.ReadKey().KeyChar));
+            }
+            catch (Exception e)
+            {
+                HelperService.GetInstance().ClearConsoleAndWriteMessage($"Could not proceed this action due to {e.Message}");
+            }
+        }
 
-		public static void ChangeCurrentUser()
+        // Private methods ----------------------------------------------------------------------------------------------------------------------------------
+
+        private void startNewAction(char userDecision)
+        {
+            switch (userDecision)
+            {
+                case 'x': closeLogger(); break;
+                case 'c': changeCurrentUser(); break;
+                case 'z': StartLoggerLogic(); break;
+                case 'w':
+                    TxtLogger txtLogger = new TxtLogger();
+                    txtLogger.DisplayAllLogsSavedSoFar(); break;
+                default: ChooseNewAction(); break;
+            }
+            Console.Clear();
+        }
+
+        private static void changeCurrentUser()
 		{
-			UserService newUserService = new UserService();
-			newUserService.SetCurrentUser();
-		}
+            UserService.GetInstance().CreateNewUser();
+		}		
 
-
-		
-
-		public void LogToFile(string getLogName, string getText)
+		private void logToFile(string getLogName, string getText)
 		{
-			LoggerFactory fileFactory = loggerFactoryProvider.LoggerFactoryList.Where(z => z is TxtLoggerFactory).Select(x => x as TxtLoggerFactory).FirstOrDefault();
+            LoggerFactory fileFactory = LoggerFactoryProvider.GetLoggerFactory(LoggerTypes.TxtLogger);
 			ILogger fileLogger = fileFactory.CreateLogger();
-			fileLogger.LogTo(getLogName,getText);
+			fileLogger.LogMessage(getLogName,getText);
 		}
 
-
-
-
-		public void LogToAllDestinations(string getLogName, string getText)
+		private void logToAllDestinations(string getLogName, string getText)
 		{
-			foreach (var factory in loggerFactoryProvider.LoggerFactoryList)
+			foreach (var loggerFactory in LoggerFactoryProvider.GetAllLoggerFactories())
 			{
-				ILogger thisLogger = factory.CreateLogger();
-				thisLogger.LogTo(getLogName, getText);
+				ILogger currentLogger = loggerFactory.CreateLogger();
+				currentLogger.LogMessage(getLogName, getText);
 			}
 		}
 
-		
-
-
-		public void NewAction()
+		private void closeLogger()
 		{
-			try
-			{
-				Console.Clear();
-				Console.WriteLine("Aby zapisać log (wciśnij 'Z') \n\nAby wyświetlić zapisane logi (wciśnij 'W') " +
-					"\n\nAby zmienic nazwe uzytkownika (wcisnij 'C') \n\nAby zamknac MyLoggerApp (wciśnij 'X')");
-				char newDecision = char.ToLower(Console.ReadKey().KeyChar);
-				Console.Clear();
-				switch (newDecision)
-				{
-					case 'x': CloseLogger(); break;
-					case 'c': ChangeCurrentUser(); break;
-					case 'z': RunLogger(); break;
-					case 'w':
-						TxtLogger txtLogger = new TxtLogger();
-						txtLogger.ReadLogsFromFile(); break;
-					default: NewAction(); break;
-				}
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.Message);
-			}
-		}
-
-		
-
-
-		public void CloseLogger()
-		{
-			Console.Clear();
-			Console.WriteLine("WYBRANO OPCJE - ZAKONCZ PROGRAM");
+            HelperService.GetInstance().ClearConsoleAndWriteMessage("Closing the program ... please wait");
 			Thread.Sleep(1000);
 			Environment.Exit(0);
 		}
-
 	}
 }

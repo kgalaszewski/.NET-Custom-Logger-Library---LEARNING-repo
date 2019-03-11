@@ -7,5 +7,4 @@
 			return new RegistryLogger();
 		}
 	}
-}           //UserService currentUserService = new UserService();
-			////currentUserService.SetCurrentUser();
+}

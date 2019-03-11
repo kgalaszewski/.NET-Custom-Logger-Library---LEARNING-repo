@@ -1,60 +1,43 @@
-﻿using System;
+﻿using MyLoggerApp.Services;
+using System;
 using System.IO;
 
 namespace MyLogger
 {
 	public sealed class TxtLogger : ILogger
 	{
-		private string fileName = "FileMyLogger.txt";
-
+		private string _fileName = "FileMyLogger.txt";		
 		
-		
-		public void LogTo(string getLogName, string getLogContent)
+		public void LogMessage(string logName, string logContent)
 		{
-			try
-			{
-				using (StreamWriter thisTxtFile = new StreamWriter((fileName), true))
-				{
-					thisTxtFile.WriteLine($"{DateTime.Now}€{UserService.CurrentUser}€{getLogName}€{getLogContent}");
-					thisTxtFile.Close();
-				}
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Nie udało się zapisać do pliku.txt");
-				Console.WriteLine(e.Message);
-			}			
-			Console.WriteLine($"Zapisano do pliku MyLogger/bin/Debug{fileName}");
+            HelperService.GetInstance().EnsureThatActionSucceed(() => {
+                using (StreamWriter streamWriter = new StreamWriter((_fileName), true))
+                {
+                    streamWriter.WriteLine($"{DateTime.Now}€{UserService.CurrentUserName}€{logName}€{logContent}");
+                    streamWriter.Close();
+                }
+                Console.WriteLine($"The message have been logged to MyLogger/bin/Debug{_fileName}");
+            }, "The message could not have been logged to file.txt");			
 		}
-		//UserService currentUserService = new UserService();
-		////currentUserService.SetCurrentUser();
 
-		/// <summary>
-		/// Reading all logs from file, then injecting to LogReaderService List
-		/// </summary>
-		public void ReadLogsFromFile()
+		public void DisplayAllLogsSavedSoFar()
 		{
-			try
-			{
-				using (StreamReader thisTxtFile = new StreamReader(fileName))
-				{
-					string thisRow;
-					LogReaderService logReaderService = new LogReaderService();
+            HelperService.GetInstance().EnsureThatActionSucceed(() => {
+                using (StreamReader streamReader = new StreamReader(_fileName))
+                {
+                    string thisRow;
+                    LogsDisplayingService logReaderService = new LogsDisplayingService();
 
-					while ((thisRow = thisTxtFile.ReadLine()) != null)
-					{
-						logReaderService.ListOfAllLines.Add(thisRow);
-					}
-					thisTxtFile.Close();
-					logReaderService.RunReader();
-				}
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Odczyt logów nie powiódł się");
-				Console.WriteLine(e.Message);
-			}
-			LoggerService.GetInstance.NewAction();
+                    while ((thisRow = streamReader.ReadLine()) != null)
+                    {
+                        logReaderService.AllLogsCollection.Add(thisRow);
+                    }
+
+                    streamReader.Close();
+                    logReaderService.ProcessAndDisplayTheReadLogs();
+                    LoggerService.GetInstance().ChooseNewAction();
+                }
+            }, "Could not get all logs saved so far");
 		}
 	}
 }

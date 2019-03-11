@@ -1,31 +1,32 @@
-﻿using System;
-using System.Threading;
+﻿using MyLoggerApp.Services;
+using System;
 
 namespace MyLogger
 {
-	public sealed class UserService
+    public sealed class UserService
 	{
-		public delegate void OnCurrentUserSet();
+        private UserService() { HelperService.GetInstance().ClearConsoleAndWriteMessage("Welcome to MyLoggerApp\n\n"); }
 
-		OnCurrentUserSet startLoggerForCurrentUser = LoggerService.GetInstance.RunLogger;
+        private static readonly UserService _Instance = new UserService();
 
-		public static string CurrentUser;
+        public static UserService GetInstance()
+        {
+            return _Instance;
+        }
 
+        public static string CurrentUserName;
+        
+		public void CreateNewUser()
+		{			
+            string givenNickName = null;
 
-		//UserService currentUserService = new UserService();
-		////currentUserService.SetCurrentUser();
-		public void SetCurrentUser()
-		{
-			Console.Clear();
-			Console.WriteLine("Podaj swoja nazwe uzytkownika");
-			CurrentUser = Console.ReadLine();
-			if (String.IsNullOrEmpty(CurrentUser))
+			while (String.IsNullOrWhiteSpace(givenNickName))
 			{
-				Console.WriteLine("Nazwa uzytkownika nie moze byc pusta");
-				Thread.Sleep(2000);
-				SetCurrentUser();
-			}			
-			startLoggerForCurrentUser();
-		}
+                HelperService.GetInstance().ClearConsoleAndWriteMessage("Please, choose and type your NickName");
+                givenNickName = Console.ReadLine();
+			}
+
+            LoggerService.GetInstance().StartLoggerLogic();
+        }
 	}
 }

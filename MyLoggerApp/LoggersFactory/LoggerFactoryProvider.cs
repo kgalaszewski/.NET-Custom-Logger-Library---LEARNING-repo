@@ -1,14 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using MyLoggerApp.LoggersFactory;
+using System;
+using System.Collections.Generic;
 
 namespace MyLogger
 {
-	/// <summary>
-	/// Keeping all LoggerFactories in list to let User choose which logger to create from available options
-	/// </summary>
 	class LoggerFactoryProvider
 	{
-		public List<LoggerFactory> LoggerFactoryList = new List<LoggerFactory>() {new TxtLoggerFactory(), new EventLoggerFactory(), new RegistryLoggerFactory()};
+        public static List<LoggerFactory> GetAllLoggerFactories()
+        {
+            return new List<LoggerFactory>() { new TxtLoggerFactory(), new EventLoggerFactory(), new RegistryLoggerFactory() };
+        }
+
+        public static LoggerFactory GetLoggerFactory( LoggerTypes loggerType)
+        {
+            switch (loggerType)
+            {
+                case LoggerTypes.EventLogger:
+                    return new EventLoggerFactory();
+                case LoggerTypes.RegistryLogger:
+                    return new RegistryLoggerFactory();
+                case LoggerTypes.TxtLogger:
+                    return new TxtLoggerFactory();
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
 	}
 }
-//UserService currentUserService = new UserService();
-////currentUserService.SetCurrentUser();

@@ -1,42 +1,28 @@
-﻿using System;
+﻿using MyLoggerApp.Services;
+using System;
 using System.Diagnostics;
 
 namespace MyLogger
 {
 	public sealed class EventLogger : ILogger
 	{
-		private string mySource = "MyLogger Application";
-		private string myLog = "MyLogger Application";
+		private string _mySource = "MyLogger Application";
+		private string _myLog = "MyLogger Application";
 
 		public EventLogger()
 		{
-			if (!EventLog.SourceExists(mySource))
-				EventLog.CreateEventSource(mySource, myLog);
+			if (!EventLog.SourceExists(_mySource))
+				EventLog.CreateEventSource(_mySource, _myLog);
 		}
-		//UserService currentUserService = new UserService();
-		////currentUserService.SetCurrentUser();
 
-
-
-		public void LogTo(string getLogName, string getLogContent)
+		public void LogMessage(string logName, string logContent)
 		{
-			string completeLog = $"{getLogName}: {getLogContent}";
+			string fullLogMessage = $"{logName}: {logContent}";
 
-			try
-			{
-				EventLog.WriteEntry(mySource, completeLog);
-			}
-			catch (SystemException se)
-			{
-				Console.WriteLine("Nie masz wystarczajacych uprawnien");
-				Console.WriteLine(se.Message);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Zapis do EventViewer nie powiódł się");
-				Console.WriteLine(e.Message);
-			}
-			Console.WriteLine($"Dokonano wpisu do EventViewer/Applications and Services Logs: {myLog}");
+            HelperService.GetInstance().EnsureThatActionSucceed(() => {
+                EventLog.WriteEntry(_mySource, fullLogMessage);
+                Console.WriteLine($"The message has been logged to an EventViewer/Applications and Services Logs: {_myLog}");
+            }, "The message could not have been logged");
 		}
 	}
 }

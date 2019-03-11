@@ -55,7 +55,9 @@
     <Compile Include="LoggersFactory\LoggerFactoryProvider.cs" />
     <Compile Include="LoggersFactory\EventLoggerFactory.cs" />
     <Compile Include="LoggersFactory\LoggerFactory.cs" />
-    <Compile Include="Services\LogReaderService.cs" />
+    <Compile Include="LoggersFactory\LoggerTypes.cs" />
+    <Compile Include="Services\HelperService.cs" />
+    <Compile Include="Services\LogsDisplayingService.cs" />
     <Compile Include="LoggersFactory\RegistryLoggerFactory.cs" />
     <Compile Include="LoggersFactory\TxtLoggerFactory.cs" />
     <Compile Include="Services\UserService.cs" />

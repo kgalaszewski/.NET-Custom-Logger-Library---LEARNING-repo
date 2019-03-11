@@ -6,6 +6,5 @@
 		{
 			return new TxtLogger();
 		}
-	}           //UserService currentUserService = new UserService();
-				////currentUserService.SetCurrentUser();
+	}
 }

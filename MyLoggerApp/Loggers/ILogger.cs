@@ -2,8 +2,6 @@
 {
 	interface ILogger
 	{
-		void LogTo(string getLogContent, string getLogName);
+		void LogMessage(string logName, string logContent);
 	}
 }
-//UserService currentUserService = new UserService();
-////currentUserService.SetCurrentUser();
