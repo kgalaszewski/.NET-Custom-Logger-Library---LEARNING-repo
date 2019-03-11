@@ -30,7 +30,8 @@ namespace MyLogger
                 HelperService.GetInstance().ClearConsoleAndWriteMessage("Please, type your message");
 				string givenContent = Console.ReadLine();
 
-                HelperService.GetInstance().EnsureThatActionSucceed(() => {
+                HelperService.GetInstance().EnsureThatActionSucceed(() => 
+                {
                     if (logDestination.Equals('1'))
                         logToFile(givenLogName, givenContent);
                     else
@@ -38,7 +39,7 @@ namespace MyLogger
 
                     Console.ReadKey();
                     ChooseNewAction();
-                }, "Could not run logger properly");
+                }, null, "Could not run logger properly");
 			}
 			else
 			{

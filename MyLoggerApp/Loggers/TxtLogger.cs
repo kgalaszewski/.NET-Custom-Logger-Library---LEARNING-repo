@@ -10,19 +10,21 @@ namespace MyLogger
 		
 		public void LogMessage(string logName, string logContent)
 		{
-            HelperService.GetInstance().EnsureThatActionSucceed(() => {
+            HelperService.GetInstance().EnsureThatActionSucceed(() => 
+            {
                 using (StreamWriter streamWriter = new StreamWriter((_fileName), true))
                 {
                     streamWriter.WriteLine($"{DateTime.Now}€{UserService.CurrentUserName}€{logName}€{logContent}");
                     streamWriter.Close();
                 }
                 Console.WriteLine($"The message have been logged to MyLogger/bin/Debug{_fileName}");
-            }, "The message could not have been logged to file.txt");			
+            }, null, "The message could not have been logged to file.txt");			
 		}
 
 		public void DisplayAllLogsSavedSoFar()
 		{
-            HelperService.GetInstance().EnsureThatActionSucceed(() => {
+            HelperService.GetInstance().EnsureThatActionSucceed(() => 
+            {
                 using (StreamReader streamReader = new StreamReader(_fileName))
                 {
                     string thisRow;
@@ -37,7 +39,7 @@ namespace MyLogger
                     logReaderService.ProcessAndDisplayTheReadLogs();
                     LoggerService.GetInstance().ChooseNewAction();
                 }
-            }, "Could not get all logs saved so far");
+            }, null, "Could not get all logs saved so far");
 		}
 	}
 }

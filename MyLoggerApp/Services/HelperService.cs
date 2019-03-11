@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace MyLoggerApp.Services
 {
@@ -19,7 +20,7 @@ namespace MyLoggerApp.Services
             Console.WriteLine(msg);
         }
 
-        public void EnsureThatActionSucceed(Action action, string errorMsg = "error message not implemented")
+        public void EnsureThatActionSucceed(Action action, Action finallyAction, string errorMsg = "error message not implemented")
         {
             try
             {
@@ -28,7 +29,12 @@ namespace MyLoggerApp.Services
             catch (Exception e)
             {
                 ClearConsoleAndWriteMessage($"ErrorMessage : {errorMsg}\nSystemErrorMessage : {e.Message}");
+                Thread.Sleep(500);
                 Console.ReadKey();
+            }
+            finally
+            {
+                finallyAction.Invoke();
             }
         }
     }

@@ -16,11 +16,12 @@ namespace MyLogger
 
         public void LogMessage(string logName, string logContent)
 		{
-            HelperService.GetInstance().EnsureThatActionSucceed(() => {
+            HelperService.GetInstance().EnsureThatActionSucceed(() => 
+            {
                 _registryKey.SetValue(logName, logContent);
                 _registryKey.Close();
                 Console.WriteLine("The message have been logged to : HKEY_CURRENT_USER/MyLoggerRegistery");
-            }, "The message could not have been logged");
+            }, null, "The message could not have been logged");
 		}
 	}
 }

@@ -19,10 +19,11 @@ namespace MyLogger
 		{
 			string fullLogMessage = $"{logName}: {logContent}";
 
-            HelperService.GetInstance().EnsureThatActionSucceed(() => {
+            HelperService.GetInstance().EnsureThatActionSucceed(() => 
+            {
                 EventLog.WriteEntry(_mySource, fullLogMessage);
                 Console.WriteLine($"The message has been logged to an EventViewer/Applications and Services Logs: {_myLog}");
-            }, "The message could not have been logged");
+            }, null,"The message could not have been logged");
 		}
 	}
 }
