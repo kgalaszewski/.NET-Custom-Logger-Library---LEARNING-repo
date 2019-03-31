@@ -4,6 +4,7 @@
     {
         EventLogger,
         RegistryLogger,
-        TxtLogger
+        TxtLogger,
+        OtherLogger
     }
 }

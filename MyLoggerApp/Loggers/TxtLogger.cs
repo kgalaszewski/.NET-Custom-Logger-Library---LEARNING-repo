@@ -1,45 +1,41 @@
-﻿using MyLoggerApp.Services;
+﻿using MyLoggerApp.Loggers;
+using MyLoggerApp.Services;
 using System;
-using System.IO;
 
 namespace MyLogger
 {
-	public sealed class TxtLogger : ILogger
-	{
-		private string _fileName = "FileMyLogger.txt";		
-		
-		public void LogMessage(string logName, string logContent)
-		{
-            HelperService.GetInstance().EnsureThatActionSucceed(() => 
+    public sealed class TxtLogger : IMyLogger
+    {
+        private const string _fileName = "FileMyLogger.txt";
+        private ITxtLoggerService _txtService;
+
+        public TxtLogger(ITxtLoggerService service = null)
+        {
+            _txtService = service ?? new TxtLoggerService();
+        }
+
+        public void LogMessage(string logName, string logContent)
+        {
+            if (!string.IsNullOrWhiteSpace(logName) && !string.IsNullOrWhiteSpace(logContent))
             {
-                using (StreamWriter streamWriter = new StreamWriter((_fileName), true))
-                {
-                    streamWriter.WriteLine($"{DateTime.Now}€{UserService.CurrentUserName}€{logName}€{logContent}");
-                    streamWriter.Close();
-                }
-                Console.WriteLine($"The message have been logged to MyLogger/bin/Debug{_fileName}");
-            }, null, "The message could not have been logged to file.txt");			
-		}
+                string fullLogMessage = $"{logName}: {logContent}";
 
-		public void DisplayAllLogsSavedSoFar()
-		{
-            HelperService.GetInstance().EnsureThatActionSucceed(() => 
+                HelperService.GetInstance().EnsureThatActionSucceed(() =>
+                {
+                    _txtService.WriteToFile(_fileName, logName, logContent);
+                    Console.WriteLine($"The message has been logged to MyLogger/bin/Debug{_fileName}");
+                }, null, "The message could not have been logged to file.txt");
+            }
+            else
+                HelperService.GetInstance().DisplayEmptyLogParametersAlert("logName", "logContent");
+        }
+
+        public void DisplayAllLogsSavedSoFar()
+        {
+            HelperService.GetInstance().EnsureThatActionSucceed(() =>
             {
-                using (StreamReader streamReader = new StreamReader(_fileName))
-                {
-                    string thisRow;
-                    LogsDisplayingService logReaderService = new LogsDisplayingService();
-
-                    while ((thisRow = streamReader.ReadLine()) != null)
-                    {
-                        logReaderService.AllLogsCollection.Add(thisRow);
-                    }
-
-                    streamReader.Close();
-                    logReaderService.ProcessAndDisplayTheReadLogs();
-                    LoggerService.GetInstance().ChooseNewAction();
-                }
+                _txtService.DisplayAllSavedLogs(_fileName);
             }, null, "Could not get all logs saved so far");
-		}
-	}
+        }
+    }
 }

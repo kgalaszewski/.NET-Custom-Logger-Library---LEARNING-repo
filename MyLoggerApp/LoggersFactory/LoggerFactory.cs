@@ -1,7 +1,7 @@
 ﻿namespace MyLogger
 {
-	abstract class LoggerFactory
+	public abstract class LoggerFactory
 	{
-		public abstract ILogger CreateLogger();
+		public abstract IMyLogger CreateLogger();
 	}
 }

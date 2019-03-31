@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 
 namespace MyLoggerApp.Services
@@ -34,8 +35,13 @@ namespace MyLoggerApp.Services
             }
             finally
             {
-                finallyAction.Invoke();
+                finallyAction?.Invoke();
             }
+        }
+
+        public void DisplayEmptyLogParametersAlert(params string[] arguments)
+        {
+            arguments.ToList().ForEach(nameToDisplay => Console.WriteLine($"You have to define {nameToDisplay} first before using Logger"));
         }
     }
 }

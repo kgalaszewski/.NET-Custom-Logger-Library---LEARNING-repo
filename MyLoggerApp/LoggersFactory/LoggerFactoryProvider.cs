@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace MyLogger
 {
-	class LoggerFactoryProvider
-	{
+    public class LoggerFactoryProvider
+    {
         public static List<LoggerFactory> GetAllLoggerFactories()
         {
             return new List<LoggerFactory>() { new TxtLoggerFactory(), new EventLoggerFactory(), new RegistryLoggerFactory() };
         }
 
-        public static LoggerFactory GetLoggerFactory( LoggerTypes loggerType)
+        public static LoggerFactory GetLoggerFactory(LoggerTypes loggerType)
         {
             switch (loggerType)
             {
@@ -25,5 +25,5 @@ namespace MyLogger
                     throw new InvalidOperationException();
             }
         }
-	}
+    }
 }

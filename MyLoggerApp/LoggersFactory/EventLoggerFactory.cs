@@ -1,8 +1,8 @@
 ﻿namespace MyLogger
 {
-	class EventLoggerFactory : LoggerFactory
+	public class EventLoggerFactory : LoggerFactory
 	{
-		public override ILogger CreateLogger()
+		public override IMyLogger CreateLogger()
 		{
 			return new EventLogger();
 		}

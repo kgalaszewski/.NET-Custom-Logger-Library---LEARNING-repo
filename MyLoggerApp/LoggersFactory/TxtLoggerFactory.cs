@@ -1,8 +1,8 @@
 ﻿namespace MyLogger
 {
-	class TxtLoggerFactory : LoggerFactory
+	public class TxtLoggerFactory : LoggerFactory
 	{
-		public override ILogger CreateLogger()
+		public override IMyLogger CreateLogger()
 		{
 			return new TxtLogger();
 		}

@@ -1,27 +1,31 @@
-﻿using Microsoft.Win32;
+﻿using MyLoggerApp.Loggers;
 using MyLoggerApp.Services;
 using System;
-using System.Security;
 
 namespace MyLogger
 {
-	public sealed class RegistryLogger : ILogger
+    public sealed class RegistryLogger : IMyLogger
 	{
-        private RegistryKey _registryKey;
+        private IRegistryService _registryService;
 
-        public RegistryLogger()
+        public RegistryLogger(IRegistryService service = null)
         {
-            _registryKey = Registry.CurrentUser.CreateSubKey("MyLoggerRegistry");
+            _registryService = service ?? new RegistryService();
+            _registryService.CreateSubKey("MyLoggerApp");
         }
 
         public void LogMessage(string logName, string logContent)
 		{
-            HelperService.GetInstance().EnsureThatActionSucceed(() => 
+            if (!string.IsNullOrWhiteSpace(logName) && !string.IsNullOrWhiteSpace(logContent))
             {
-                _registryKey.SetValue(logName, logContent);
-                _registryKey.Close();
-                Console.WriteLine("The message have been logged to : HKEY_CURRENT_USER/MyLoggerRegistery");
-            }, null, "The message could not have been logged");
+                HelperService.GetInstance().EnsureThatActionSucceed(() =>
+                {
+                    _registryService.SetValue(logName, logContent);
+                    Console.WriteLine("The message has been logged to : HKEY_CURRENT_USER/MyLoggerRegistery");
+                }, null, "The message could not have been logged");
+            }
+            else
+                HelperService.GetInstance().DisplayEmptyLogParametersAlert("logName", "logContent");
 		}
 	}
 }

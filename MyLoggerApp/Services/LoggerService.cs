@@ -89,7 +89,7 @@ namespace MyLogger
 		private void logToFile(string getLogName, string getText)
 		{
             LoggerFactory fileFactory = LoggerFactoryProvider.GetLoggerFactory(LoggerTypes.TxtLogger);
-			ILogger fileLogger = fileFactory.CreateLogger();
+			IMyLogger fileLogger = fileFactory.CreateLogger();
 			fileLogger.LogMessage(getLogName,getText);
 		}
 
@@ -97,7 +97,7 @@ namespace MyLogger
 		{
 			foreach (var loggerFactory in LoggerFactoryProvider.GetAllLoggerFactories())
 			{
-				ILogger currentLogger = loggerFactory.CreateLogger();
+				IMyLogger currentLogger = loggerFactory.CreateLogger();
 				currentLogger.LogMessage(getLogName, getText);
 			}
 		}

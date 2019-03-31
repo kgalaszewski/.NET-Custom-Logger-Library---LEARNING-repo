@@ -1,29 +1,35 @@
-﻿using MyLoggerApp.Services;
+﻿using MyLoggerApp.Loggers;
+using MyLoggerApp.Services;
 using System;
-using System.Diagnostics;
 
 namespace MyLogger
 {
-	public sealed class EventLogger : ILogger
+	public sealed class EventLogger : IMyLogger
 	{
 		private string _mySource = "MyLogger Application";
 		private string _myLog = "MyLogger Application";
+        private IEventLogService _eventLogService;
 
-		public EventLogger()
+        public EventLogger(IEventLogService eventLogService = null)
 		{
-			if (!EventLog.SourceExists(_mySource))
-				EventLog.CreateEventSource(_mySource, _myLog);
+            _eventLogService = eventLogService ?? new EventLogService();
+            _eventLogService.CheckIfSourceExists(_mySource, _myLog);
 		}
 
 		public void LogMessage(string logName, string logContent)
 		{
-			string fullLogMessage = $"{logName}: {logContent}";
-
-            HelperService.GetInstance().EnsureThatActionSucceed(() => 
+            if (!string.IsNullOrWhiteSpace(logName) && !string.IsNullOrWhiteSpace(logContent))
             {
-                EventLog.WriteEntry(_mySource, fullLogMessage);
-                Console.WriteLine($"The message has been logged to an EventViewer/Applications and Services Logs: {_myLog}");
-            }, null,"The message could not have been logged");
-		}
+                string fullLogMessage = $"{logName}: {logContent}";
+
+                HelperService.GetInstance().EnsureThatActionSucceed(() =>
+                {
+                    _eventLogService.WriteToEventLog(_mySource, fullLogMessage);
+                    Console.WriteLine($"The message has been logged to an EventViewer/Applications and Services Logs: {_myLog}");
+                }, null, "The message could not have been logged");
+            }	
+            else
+                HelperService.GetInstance().DisplayEmptyLogParametersAlert("logName", "logContent");
+        }
 	}
 }

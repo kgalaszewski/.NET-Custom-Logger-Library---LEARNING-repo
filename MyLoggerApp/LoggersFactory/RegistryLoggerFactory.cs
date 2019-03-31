@@ -1,8 +1,8 @@
 ﻿namespace MyLogger
 {
-	class RegistryLoggerFactory : LoggerFactory
+	public class RegistryLoggerFactory : LoggerFactory
 	{
-		public override ILogger CreateLogger()
+		public override IMyLogger CreateLogger()
 		{
 			return new RegistryLogger();
 		}
