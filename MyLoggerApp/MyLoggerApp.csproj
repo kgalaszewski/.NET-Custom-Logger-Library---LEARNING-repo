@@ -76,6 +76,8 @@
     <Compile Include="Loggers\RegistryService.cs" />
     <Compile Include="Loggers\TxtLoggerService.cs" />
     <Compile Include="Services\HelperService.cs" />
+    <Compile Include="Services\IHelperService.cs" />
+    <Compile Include="Services\ILoggerService.cs" />
     <Compile Include="Services\LogsDisplayingService.cs" />
     <Compile Include="LoggersFactory\RegistryLoggerFactory.cs" />
     <Compile Include="LoggersFactory\TxtLoggerFactory.cs" />

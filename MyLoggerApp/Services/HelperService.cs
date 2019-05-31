@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace MyLoggerApp.Services
 {
-    public class HelperService
+    public class HelperService : IHelperService
     {
         private static readonly HelperService _Instance = new HelperService();
 

@@ -5,11 +5,15 @@ using System.Threading;
 
 namespace MyLogger
 {
-    public sealed class LoggerService
-	{
+    public sealed class LoggerService : ILoggerService
+    {
 		private static readonly LoggerService _Instance = new LoggerService();
 
+        private IHelperService _helperService = HelperService.GetInstance();
+
 		private LoggerService()	{ }
+
+        private string errorMsg { get; set; }
 
 		public static LoggerService GetInstance()
 		{
@@ -20,17 +24,17 @@ namespace MyLogger
 
         public void StartLoggerLogic()
 		{
-            HelperService.GetInstance().ClearConsoleAndWriteMessage("Where do you want to log your message : \n3 destinations : Registry, EventViewer and File.txt -> press '3' \nOnly to File.txt -> press '1'");
+            _helperService.ClearConsoleAndWriteMessage("Where do you want to log your message : \n3 destinations : Registry, EventViewer and File.txt -> press '3' \nOnly to File.txt -> press '1'");
             char logDestination = char.ToLower(Console.ReadKey().KeyChar);
 
 			if (logDestination.Equals('1') || logDestination.Equals('3'))
 			{
-                HelperService.GetInstance().ClearConsoleAndWriteMessage("Please, type the name/ID of your message");
+                _helperService.ClearConsoleAndWriteMessage("Please, type the name/ID of your message");
                 string givenLogName = Console.ReadLine();
-                HelperService.GetInstance().ClearConsoleAndWriteMessage("Please, type your message");
+                _helperService.ClearConsoleAndWriteMessage("Please, type your message");
 				string givenContent = Console.ReadLine();
 
-                HelperService.GetInstance().EnsureThatActionSucceed(() => 
+                _helperService.EnsureThatActionSucceed(() => 
                 {
                     if (logDestination.Equals('1'))
                         logToFile(givenLogName, givenContent);
@@ -43,7 +47,7 @@ namespace MyLogger
 			}
 			else
 			{
-                HelperService.GetInstance().ClearConsoleAndWriteMessage("Incorret choice");
+                _helperService.ClearConsoleAndWriteMessage("Incorret choice");
                 Thread.Sleep(1000);
 				ChooseNewAction();
 			}				
@@ -53,15 +57,21 @@ namespace MyLogger
         {
             try
             {
-                HelperService.GetInstance().ClearConsoleAndWriteMessage("To save your logs (press 'Z') \n\nTo display all the saved logs (press 'W') " +
+                _helperService.ClearConsoleAndWriteMessage("To save your logs (press 'Z') \n\nTo display all the saved logs (press 'W') " +
                     "\n\nTo change your NickName (press 'C') \n\nTo Close MyLoggerApp (press 'X')");
 
                 startNewAction(char.ToLower(Console.ReadKey().KeyChar));
             }
             catch (Exception e)
             {
-                HelperService.GetInstance().ClearConsoleAndWriteMessage($"Could not proceed this action due to {e.Message}");
+                errorMsg = $"Could not proceed this action due to {e.Message}";
+                _helperService.ClearConsoleAndWriteMessage(errorMsg);
             }
+        }
+
+        public void SetHelperService(IHelperService service = null)
+        {
+            _helperService = service ?? HelperService.GetInstance();
         }
 
         // Private methods ----------------------------------------------------------------------------------------------------------------------------------
@@ -104,7 +114,7 @@ namespace MyLogger
 
 		private void closeLogger()
 		{
-            HelperService.GetInstance().ClearConsoleAndWriteMessage("Closing the program ... please wait");
+            _helperService.ClearConsoleAndWriteMessage("Closing the program ... please wait");
 			Thread.Sleep(1000);
 			Environment.Exit(0);
 		}

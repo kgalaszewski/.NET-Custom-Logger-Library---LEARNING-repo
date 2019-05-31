@@ -7,6 +7,9 @@ namespace MyLogger
 	{
         private UserService() { HelperService.GetInstance().ClearConsoleAndWriteMessage("Welcome to MyLoggerApp\n\n"); }
 
+        private ILoggerService _service = LoggerService.GetInstance();
+        private IHelperService _helperService = HelperService.GetInstance();
+
         private static readonly UserService _Instance = new UserService();
 
         public static UserService GetInstance()
@@ -26,7 +29,13 @@ namespace MyLogger
                 givenNickName = Console.ReadLine();
 			}
 
-            LoggerService.GetInstance().StartLoggerLogic();
+            _service.StartLoggerLogic();
+        }
+
+        public void SetServices(ILoggerService service, IHelperService hservice)
+        {
+            _service = service ?? LoggerService.GetInstance();
+            _helperService = hservice ?? HelperService.GetInstance();
         }
 	}
 }
