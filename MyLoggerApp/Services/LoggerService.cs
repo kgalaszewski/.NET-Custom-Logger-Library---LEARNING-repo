@@ -7,51 +7,58 @@ namespace MyLogger
 {
     public sealed class LoggerService : ILoggerService
     {
-		private static readonly LoggerService _Instance = new LoggerService();
+        private static readonly LoggerService _Instance = new LoggerService();
 
-        private IHelperService _helperService = HelperService.GetInstance();
+        public IHelperService _helperService = HelperService.GetInstance();
 
-		private LoggerService()	{ }
+        private LoggerService() { }
 
         private string errorMsg { get; set; }
 
-		public static LoggerService GetInstance()
-		{
-			return _Instance;
-		}
-        
+        public bool logicFailed = false;
+
+        public static LoggerService GetInstance()
+        {
+            return _Instance;
+        }
+
         // Public methods ----------------------------------------------------------------------------------------------------------------------------------
 
-        public void StartLoggerLogic()
-		{
-            _helperService.ClearConsoleAndWriteMessage("Where do you want to log your message : \n3 destinations : Registry, EventViewer and File.txt -> press '3' \nOnly to File.txt -> press '1'");
-            char logDestination = char.ToLower(Console.ReadKey().KeyChar);
+        public void StartLoggerLogic(bool isTest = false)
+        {
+            if (!isTest)
+            {
+                _helperService.ClearConsoleAndWriteMessage("Where do you want to log your message : \n3 destinations : Registry, EventViewer and File.txt -> press '3' \nOnly to File.txt -> press '1'");
+                char logDestination = char.ToLower(Console.ReadKey().KeyChar);
 
-			if (logDestination.Equals('1') || logDestination.Equals('3'))
-			{
-                _helperService.ClearConsoleAndWriteMessage("Please, type the name/ID of your message");
-                string givenLogName = Console.ReadLine();
-                _helperService.ClearConsoleAndWriteMessage("Please, type your message");
-				string givenContent = Console.ReadLine();
 
-                _helperService.EnsureThatActionSucceed(() => 
+                if (logDestination.Equals('1') || logDestination.Equals('3'))
                 {
-                    if (logDestination.Equals('1'))
-                        logToFile(givenLogName, givenContent);
-                    else
-                        logToAllDestinations(givenLogName, givenContent);
+                    _helperService.ClearConsoleAndWriteMessage("Please, type the name/ID of your message");
+                    string givenLogName = Console.ReadLine();
+                    _helperService.ClearConsoleAndWriteMessage("Please, type your message");
+                    string givenContent = Console.ReadLine();
 
-                    Console.ReadKey();
+                    _helperService.EnsureThatActionSucceed(() =>
+                    {
+                        if (logDestination.Equals('1'))
+                            logToFile(givenLogName, givenContent);
+                        else
+                            logToAllDestinations(givenLogName, givenContent);
+
+                        Console.ReadKey();
+                        ChooseNewAction();
+                    }, null, "Could not run logger properly");
+                }
+                else
+                {
+                    _helperService.ClearConsoleAndWriteMessage("Incorret choice");
+                    logicFailed = true;
+                    Thread.Sleep(1000);
                     ChooseNewAction();
-                }, null, "Could not run logger properly");
-			}
-			else
-			{
-                _helperService.ClearConsoleAndWriteMessage("Incorret choice");
-                Thread.Sleep(1000);
-				ChooseNewAction();
-			}				
-		}
+                }
+            }
+        }
 
         public void ChooseNewAction()
         {
@@ -92,31 +99,31 @@ namespace MyLogger
         }
 
         private static void changeCurrentUser()
-		{
+        {
             UserService.GetInstance().CreateNewUser();
-		}		
+        }
 
-		private void logToFile(string getLogName, string getText)
-		{
+        private void logToFile(string getLogName, string getText)
+        {
             LoggerFactory fileFactory = LoggerFactoryProvider.GetLoggerFactory(LoggerTypes.TxtLogger);
-			IMyLogger fileLogger = fileFactory.CreateLogger();
-			fileLogger.LogMessage(getLogName,getText);
-		}
+            IMyLogger fileLogger = fileFactory.CreateLogger();
+            fileLogger.LogMessage(getLogName, getText);
+        }
 
-		private void logToAllDestinations(string getLogName, string getText)
-		{
-			foreach (var loggerFactory in LoggerFactoryProvider.GetAllLoggerFactories())
-			{
-				IMyLogger currentLogger = loggerFactory.CreateLogger();
-				currentLogger.LogMessage(getLogName, getText);
-			}
-		}
+        private void logToAllDestinations(string getLogName, string getText)
+        {
+            foreach (var loggerFactory in LoggerFactoryProvider.GetAllLoggerFactories())
+            {
+                IMyLogger currentLogger = loggerFactory.CreateLogger();
+                currentLogger.LogMessage(getLogName, getText);
+            }
+        }
 
-		private void closeLogger()
-		{
+        private void closeLogger()
+        {
             _helperService.ClearConsoleAndWriteMessage("Closing the program ... please wait");
-			Thread.Sleep(1000);
-			Environment.Exit(0);
-		}
-	}
+            Thread.Sleep(1000);
+            Environment.Exit(0);
+        }
+    }
 }

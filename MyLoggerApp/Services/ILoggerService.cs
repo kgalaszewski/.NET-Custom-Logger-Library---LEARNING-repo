@@ -6,6 +6,6 @@ namespace MyLogger
     {
         void ChooseNewAction();
         void SetHelperService(IHelperService service = null);
-        void StartLoggerLogic();
+        void StartLoggerLogic(bool sth);
     }
 }

@@ -29,7 +29,7 @@ namespace MyLogger
                 givenNickName = Console.ReadLine();
 			}
 
-            _service.StartLoggerLogic();
+            _service.StartLoggerLogic(false);
         }
 
         public void SetServices(ILoggerService service, IHelperService hservice)

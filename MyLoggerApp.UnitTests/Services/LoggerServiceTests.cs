@@ -30,15 +30,22 @@ namespace MyLoggerApp.UnitTests.Services
         }
 
         [Test]
-        public void StartLoggerLogic_WhenCalled_ClearConsoleAndWriteMessageIsCalled()
+        public void StartLoggerLogic_WhenCalled_LogicDidntFail()
         {
-            _service.StartLoggerLogic();
+            _service.StartLoggerLogic(true);
+            var result = _service.logicFailed;
+
+            Assert.That(result == false);
         }
 
         [Test]
-        public void ChooseNewAction_HelperServiceThrowsException_ClearConsoleAndWriteMessageIsInvoked()
+        public void SetHelperService_WhenCalled_SetsServiceProperely()
         {
+            var newService = HelperService.GetInstance();
+            _service.SetHelperService(newService);
+            var result = _service._helperService;
 
+            Assert.That(result, Is.EqualTo(newService));
         }
     }
 }
